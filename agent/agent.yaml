@@ -15,7 +15,7 @@ metrics:
         # In this case, our tenant is "backend"
         headers:
           X-Scope-OrgID: backend
-  wal_directory: "/tmp/alloy/prom"
+  wal_directory: "/tmp/agent/prom"
   configs:
     - name: "backend-metrics"
       scrape_configs:
@@ -64,7 +64,7 @@ logs:
       clients:
         - url: http://nginx:3502/loki/api/v1/push
       positions:
-        filename: "/tmp/alloy/loki.yaml"
+        filename: "/tmp/agent/loki.yaml"
       scrape_configs:
       # This value should be a problem --> https://github.com/grafana/loki/issues/7275
         - job_name: "backend_fastapi"

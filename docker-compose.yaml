@@ -12,7 +12,7 @@ services:
   ######################################################################################
   backend:
     container_name: backend
-    image: backend
+    image: localhost/backend
     build:
       context: generate_data_application/backend
       dockerfile: Dockerfile
@@ -31,7 +31,7 @@ services:
   ######################################################################################
   db:
     container_name: db
-    image: db
+    image: localhost/db
     build:
       context: generate_data_application/db
       dockerfile: Dockerfile
@@ -97,25 +97,6 @@ services:
       - minio-data:/data
     labels:
       namespace: monitoring
-  
-  ######################################################################################
-  ######################################################################################
-  #################################### CADVISOR ########################################
-  ######################################################################################
-  ######################################################################################
-  cadvisor:
-    container_name: cadvisor
-    image: zcube/cadvisor:latest
-    ports:
-    - 8080:8080
-    command:
-    - --raw_cgroup_prefix_whitelist=/docker/
-    volumes:
-    - /:/rootfs:ro
-    - /var/run:/var/run:rw
-    - /sys:/sys:ro
-    - /dev/disk/:/dev/disk:ro
-    - /path/to/lib/docker/:/var/lib/docker:ro
 
   ######################################################################################
   ######################################################################################
@@ -164,16 +145,16 @@ services:
   
   ######################################################################################
   ######################################################################################
-  ############################### GRAFANA ALLOY SCRAPE #################################
+  ############################### GRAFANA AGENT SCRAPE #################################
   ######################################################################################
   ######################################################################################
-  Alloy:
-    container_name: Alloy
-    image: grafana/alloy:v1.5.1
+  agent:
+    container_name: agent
+    image: grafana/agent:v0.41.1
     volumes:
-      - ./alloy/alloy.yaml:/etc/alloy.yaml
+      - ./agent/agent.yaml:/etc/agent.yaml
     command:
-      - --config.file=/etc/alloy.yaml
+      - --config.file=/etc/agent.yaml
     depends_on:
       - tempo1
       - tempo2
@@ -192,7 +173,7 @@ services:
   ######################################################################################
   loki1:
     container_name: Loki-1
-    image: grafana/loki:3.3.2
+    image: grafana/loki:2.9.11
     command: "-config.file=/etc/loki/config.yaml -target=all"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
@@ -207,7 +188,7 @@ services:
 
   loki2:
     container_name: Loki-2
-    image: grafana/loki:3.3.2
+    image: grafana/loki:2.9.11
     command: "-config.file=/etc/loki/config.yaml -target=all"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
@@ -222,7 +203,7 @@ services:
 
   loki3:
     container_name: Loki-3
-    image: grafana/loki:3.3.2
+    image: grafana/loki:2.9.11
     command: "-config.file=/etc/loki/config.yaml -target=all"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
@@ -298,7 +279,7 @@ services:
   ######################################################################################
   tempo1:
     container_name: Tempo-1
-    image: grafana/tempo:2.6.1
+    image: grafana/tempo:1.5.0
     command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
@@ -314,7 +295,7 @@ services:
 
   tempo2:
     container_name: Tempo-2
-    image: grafana/tempo:2.6.1
+    image: grafana/tempo:1.5.0
     command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
@@ -330,7 +311,7 @@ services:
 
   tempo3:
     container_name: Tempo-3
-    image: grafana/tempo:2.6.1
+    image: grafana/tempo:1.5.0
     command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
@@ -343,6 +324,26 @@ services:
           - tempo
     labels:
       namespace: monitoring
+
+  ######################################################################################
+  ######################################################################################
+  #################################### CADVISOR ########################################
+  ######################################################################################
+  ######################################################################################
+  cadvisor:
+    container_name: cadvisor
+    image: zcube/cadvisor:latest
+    ports:
+    - 8080:8080
+    command:
+    - --raw_cgroup_prefix_whitelist=/docker/
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /dev/disk/:/dev/disk:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+
 
 volumes:
   mimir1-data:
