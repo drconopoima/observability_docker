@@ -5,9 +5,24 @@ RUN apt-get update && apt-get install --no-install-recommends -y systemctl \
 WORKDIR /usr/local/bin/
 
 # Configure Promtail to send logs to Grafana Agent
-RUN curl -s -q https://api.github.com/repos/grafana/loki/releases/latest | grep browser_download_url |  cut -d '"' -f 4 | grep promtail-linux-arm64.zip | wget -i - && \
-    unzip promtail-linux-arm64.zip && \
-    mv ./promtail-linux-arm64 ./promtail
+RUN /bin/bash -c 'ARCH=`uname -m` && \
+    if [ "$ARCH" == "x86_64" ]; then \
+        curl -fsSL -o promtail-linux-amd64.zip https://github.com/grafana/loki/releases/download/v2.9.11/promtail-linux-amd64.zip && \
+        unzip promtail-linux-amd64.zip && \
+        mv ./promtail-linux-amd64 ./promtail; \
+    elif [ "$ARCH" == "arm64" ]; then \
+        curl -fsSL -o promtail-linux-arm64.zip https://github.com/grafana/loki/releases/download/v2.9.11/promtail-linux-amd64.zip && \
+        unzip promtail-linux-arm64.zip && \
+        mv ./promtail-linux-arm64 ./promtail; \
+    elif [ "$ARCH" == "arm" ]; then \
+        curl -fsSL -o promtail-linux-arm.zip  https://github.com/grafana/loki/releases/download/v2.9.11/promtail-linux-arm.zip && \
+        unzip promtail-linux-arm.zip && \
+        mv ./promtail-linux-arm ./promtail; \
+    else \
+        curl -fsSL -o promtail-linux-amd64.zip https://github.com/grafana/loki/releases/download/v2.9.11/promtail-linux-amd64.zip && \
+        unzip promtail-linux-amd64.zip && \
+        mv ./promtail-linux-amd64 ./promtail; \
+    fi'
 COPY config/promtail-config.yaml /etc/promtail/
 RUN useradd --system promtail
 COPY config/promtail.service /etc/systemd/system/
