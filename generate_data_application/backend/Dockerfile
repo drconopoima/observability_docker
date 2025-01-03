@@ -1,4 +1,4 @@
-FROM python:bullseye
+FROM python:3.10.16-bullseye
 RUN apt-get update && apt-get install --no-install-recommends -y systemctl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -11,8 +11,6 @@ RUN curl -s -q https://api.github.com/repos/grafana/loki/releases/latest | grep 
 COPY config/promtail-config.yaml /etc/promtail/
 RUN useradd --system promtail
 COPY config/promtail.service /etc/systemd/system/
-
-RUN systemctl daemon-reload
 
 # Configure FastAPI application
 WORKDIR /usr/src/app
