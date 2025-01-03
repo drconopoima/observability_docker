@@ -1,4 +1,4 @@
-FROM python:3.10.16-bullseye
+FROM docker.io/library/python:3.10.16-bullseye
 RUN apt-get update && apt-get install --no-install-recommends -y systemctl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*

@@ -44,7 +44,7 @@ services:
   # Metrics
   db_exporter:
     container_name: db_exporter
-    image: wrouesnel/postgres_exporter:latest
+    image: docker.io/wrouesnel/postgres_exporter:latest
     environment:
       - DATA_SOURCE_URI=db:5432/postgres?sslmode=disable
       - DATA_SOURCE_USER=postgres
@@ -61,7 +61,7 @@ services:
   ######################################################################################
   k6-backend:
     container_name: k6-backend
-    image: grafana/k6:0.42.0
+    image: docker.io/grafana/k6:0.42.0
     volumes:
       - ./generate_data_application/load_tests/script.js:/scripts/script.js
     command: run /scripts/script.js
@@ -87,7 +87,7 @@ services:
   ######################################################################################
   minio:
     container_name: Minio
-    image: minio/minio
+    image: docker.io/minio/minio
     entrypoint: [""]
     command: ["sh", "-c", "mkdir -p /data/mimir && mkdir -p /data/tempo && mkdir -p /data/loki-data && mkdir -p /data/loki-ruler && minio server --quiet /data"]
     environment:
@@ -105,7 +105,7 @@ services:
   ######################################################################################
   nginx:
     container_name: Nginx
-    image: nginx:latest
+    image: docker.io/library/nginx:latest
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -128,7 +128,7 @@ services:
   ######################################################################################
   grafana:
     container_name: Grafana
-    image: grafana/grafana:11.4.0
+    image: docker.io/grafana/grafana:11.4.0
     ports:
       - 3000:3000
     volumes:
@@ -150,7 +150,7 @@ services:
   ######################################################################################
   agent:
     container_name: agent
-    image: grafana/agent:v0.41.1
+    image: docker.io/grafana/agent:v0.41.1
     volumes:
       - ./agent/agent.yaml:/etc/agent.yaml
     command:
@@ -173,7 +173,7 @@ services:
   ######################################################################################
   loki1:
     container_name: Loki-1
-    image: grafana/loki:2.9.11
+    image: docker.io/grafana/loki:2.9.11
     command: "-config.file=/etc/loki/config.yaml -target=all"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
@@ -188,7 +188,7 @@ services:
 
   loki2:
     container_name: Loki-2
-    image: grafana/loki:2.9.11
+    image: docker.io/grafana/loki:2.9.11
     command: "-config.file=/etc/loki/config.yaml -target=all"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
@@ -203,7 +203,7 @@ services:
 
   loki3:
     container_name: Loki-3
-    image: grafana/loki:2.9.11
+    image: docker.io/grafana/loki:2.9.11
     command: "-config.file=/etc/loki/config.yaml -target=all"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/config.yaml
@@ -223,7 +223,7 @@ services:
   ######################################################################################
   mimir1:
     container_name: Mimir-1
-    image: grafana/mimir:2.13.1
+    image: docker.io/grafana/mimir:2.13.1
     command: ["-config.file=/etc/mimir.yaml"]
     hostname: mimir1
     depends_on:
@@ -236,7 +236,7 @@ services:
 
   mimir2:
     container_name: Mimir-2
-    image: grafana/mimir:2.13.1
+    image: docker.io/grafana/mimir:2.13.1
     command: ["-config.file=/etc/mimir.yaml"]
     hostname: mimir2
     depends_on:
@@ -249,7 +249,7 @@ services:
 
   mimir3:
     container_name: Mimir-3
-    image: grafana/mimir:2.13.1
+    image: docker.io/grafana/mimir:2.13.1
     command: ["-config.file=/etc/mimir.yaml"]
     hostname: mimir3
     depends_on:
@@ -263,7 +263,7 @@ services:
   # Continuous tests
   mimir-continuous-test:
     container_name: Mimir-Continuous-Tests
-    image: grafana/mimir-continuous-test:latest
+    image: docker.io/grafana/mimir-continuous-test:latest
     command: "-tests.write-endpoint http://nginx:3702 -tests.read-endpoint http://nginx:4702/prometheus -server.metrics-port 8085"
     depends_on:
       - mimir1
@@ -279,7 +279,7 @@ services:
   ######################################################################################
   tempo1:
     container_name: Tempo-1
-    image: grafana/tempo:1.5.0
+    image: docker.io/grafana/tempo:1.5.0
     command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
@@ -295,7 +295,7 @@ services:
 
   tempo2:
     container_name: Tempo-2
-    image: grafana/tempo:1.5.0
+    image: docker.io/grafana/tempo:1.5.0
     command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
@@ -311,7 +311,7 @@ services:
 
   tempo3:
     container_name: Tempo-3
-    image: grafana/tempo:1.5.0
+    image: docker.io/grafana/tempo:1.5.0
     command: "-target=scalable-single-binary -config.file=/etc/tempo.yaml"
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
@@ -332,7 +332,7 @@ services:
   ######################################################################################
   cadvisor:
     container_name: cadvisor
-    image: zcube/cadvisor:latest
+    image: docker.io/zcube/cadvisor:latest
     ports:
     - 8080:8080
     command:
