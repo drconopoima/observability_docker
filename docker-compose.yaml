@@ -61,7 +61,7 @@ services:
   ######################################################################################
   k6-backend:
     container_name: k6-backend
-    image: docker.io/grafana/k6:0.42.0
+    image: docker.io/grafana/k6:0.56.0
     volumes:
       - ./generate_data_application/load_tests/script.js:/scripts/script.js
     command: run /scripts/script.js
@@ -263,8 +263,8 @@ services:
   # Continuous tests
   mimir-continuous-test:
     container_name: Mimir-Continuous-Tests
-    image: docker.io/grafana/mimir-continuous-test:latest
-    command: "-tests.write-endpoint http://nginx:3702 -tests.read-endpoint http://nginx:4702/prometheus -server.metrics-port 8085"
+    image: docker.io/grafana/mimir-continuous-test:2.13.1
+    command: "-tests.write-endpoint \"http://nginx:3702\" -tests.read-endpoint \"http://nginx:4702/prometheus\" -server.http-listen-port 8085"
     depends_on:
       - mimir1
       - mimir2
