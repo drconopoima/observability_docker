@@ -30,15 +30,17 @@ The metrics of all containers are exposed with cAdvisor.
 
 ![alt schema](./assets/Observability-Grafana_Stack.png)
 
-# Prerequisite
+# Prerequisites
 
-This repository is run on Mac M1 (ARM architecture).
-If you want to use another architecture, be sure to modify the Dockerfiles which import arm binary (ex. promtail on the app Dockerfile).
+If the backend image build fails, check into [backend Dockerfile](generate_data_application/backend/Dockerfile) to add an unsupported platform. It should be building only on architectures ARM64 (M-series mac), x86 and AMD64. If you want to use another architecture, be sure to modify this Dockerfiles which import arm binary (ex. promtail on the app Dockerfile).
 
 1. Install [Docker](https://docs.docker.com/engine/install/).
+
 1.p Install [Podman](https://podman-desktop.io/docs/installation/).
+
 2. Create Docker network :
 `docker network create observability-network`
+
 2.p Alternative use podman:
 `podman network create observability-network`
 
@@ -108,11 +110,11 @@ Grafana --> Nginx : 4702 --> Mimir : 3703
 
 |                   Logo/Link                   |      Version    |               Usage                 |
 |:---------------------------------------------:|-----------------|-------------------------------------|
-| [<img src="./assets/agent.png" alt="Grafana Agent" width="200"/>](https://grafana.com/docs/agent/latest/) | main-6f9d397 | Used to scrape data from applications (front, back, databases, ...) and send to each specific storage (like OpenTelemetry Collector). Based on https://github.com/grafana/agent/blob/main/example/docker-compose/docker-compose.yaml |
+| [<img src="./assets/agent.png" alt="Grafana Agent" width="200"/>](https://grafana.com/docs/agent/latest/) | v0.41.1 | Used to scrape data from applications (front, back, databases, ...) and send to each specific storage (like OpenTelemetry Collector). Based on https://github.com/grafana/agent/blob/main/example/docker-compose/docker-compose.yaml |
 | [<img src="./assets/tempo.png" alt="Grafana Tempo" width="200"/>](https://grafana.com/docs/tempo/latest/) | v1.5.0 | Used to store Traces (like Jaeger or Zipkin). Based on https://github.com/grafana/tempo/tree/main/example/docker-compose/scalable-single-binary |
-| [<img src="./assets/mimir.png" alt="Grafana Mimir" width="200"/>](https://grafana.com/docs/mimir/latest/) | v2.4.0 | Used to store Metrics (like Prometheus or Cortex). Based on https://github.com/grafana/mimir/blob/main/docs/sources/mimir/tutorials/play-with-grafana-mimir/docker-compose.yml |
-| [<img src="./assets/loki.png" alt="Grafana Loki" width="200"/>](https://grafana.com/docs/loki/latest/) | v2.7.0 | Used to store Logs (like Elasticsearch). Based on https://github.com/grafana/loki/tree/main/examples/getting-started |
-| [<img src="./assets/grafana.png" alt="Grafana" width="200"/>](https://grafana.com/docs/grafana/latest/) | v9.3.1 | Used to visualize data (like Kibana). Based on https://github.com/grafana/grafana |
+| [<img src="./assets/mimir.png" alt="Grafana Mimir" width="200"/>](https://grafana.com/docs/mimir/latest/) | v2.13.1 | Used to store Metrics (like Prometheus or Cortex). Based on https://github.com/grafana/mimir/blob/main/docs/sources/mimir/tutorials/play-with-grafana-mimir/docker-compose.yml |
+| [<img src="./assets/loki.png" alt="Grafana Loki" width="200"/>](https://grafana.com/docs/loki/latest/) | v2.9.11 | Used to store Logs (like Elasticsearch). Based on https://github.com/grafana/loki/tree/main/examples/getting-started |
+| [<img src="./assets/grafana.png" alt="Grafana" width="200"/>](https://grafana.com/docs/grafana/latest/) | v11.4.0 | Used to visualize data (like Kibana). Based on https://github.com/grafana/grafana |
 | [<img src="./assets/minio.png" alt="Minio" width="200"/>](https://min.io) | Latest | Used to load balance traffic between each instance (on Cloud, use S3, Google Cloud Storage or similar). Based on https://github.com/minio/minio |
 | [<img src="./assets/nginx.png" alt="NGinx" width="200"/>](https://www.nginx.com/) | Latest | Used to load balance traffic between each instance. Based on https://github.com/nginx/nginx |
 | [<img src="./assets/cadvisor.png" alt="cAdvisor" width="200"/>](https://github.com/google/cadvisor) | Latest | Used to expose all containers metrics |
@@ -123,9 +125,9 @@ Thanks to [@Blueswen](https://github.com/blueswen) for the FastAPI observability
 
 |                   Logo/Link                   |      Version    |               Usage                 |
 |:---------------------------------------------:|-----------------|-------------------------------------|
-| [<img src="./assets/promtail.png" alt="Promtail" height="100">](https://grafana.com/docs/loki/latest/clients/promtail/) | Latest | Used to scrape application logs from file. |
-| [<img src="./assets/fastapi.png" alt="FastAPI" width="200">](https://fastapi.tiangolo.com) | 0.88.0 | Used to expose API. Based on  https://github.com/Blueswen/fastapi-observability |
+| [<img src="./assets/promtail.png" alt="Promtail" height="100">](https://grafana.com/docs/loki/latest/clients/promtail/) | v2.9.11 | Used to scrape application logs from file. |
+| [<img src="./assets/fastapi.png" alt="FastAPI" width="200">](https://fastapi.tiangolo.com) | >=0.88.0 (0.115.6) | Used to expose API. Based on  https://github.com/Blueswen/fastapi-observability |
 | [<img src="./assets/postgresql.png" alt="PostgreSQL" width="200">](https://www.postgresql.org) | 15-Bullseye | Used to store application data. |
 | [<img src="./assets/prometheus.png" height="100">](https://github.com/prometheus-community/postgres_exporter) | Latest | Used to export Postgres metrics. Based on https://hub.docker.com/r/wrouesnel/postgres_exporter |
-| [<img src="./assets/k6.png" alt="k6.io" height="100">](https://www.k6.io) | Latest | Used to performed unit tests. |
-| [<img src="./assets/otel.png" alt="OpenTelemetry" width="200">](https://github.com/open-telemetry/opentelemetry-python) | 1.15.0 | Used to generate traces. |
+| [<img src="./assets/k6.png" alt="k6.io" height="100">](https://www.k6.io) | 0.56.0 | Used to performed unit tests. |
+| [<img src="./assets/otel.png" alt="OpenTelemetry" width="200">](https://github.com/open-telemetry/opentelemetry-python) | >=1.15.0 (1.29.0) | Used to generate traces. |
